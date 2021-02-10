@@ -90,7 +90,7 @@ const Webscraper = () => {
     <div>
       <Modal show={showData} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Scraped Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {resultData !== "" ? (
@@ -115,7 +115,7 @@ const Webscraper = () => {
         <br />
         <div className="row">
           <div className="card col-md-8 offset-md-2 text-center">
-            <h2>Webscraper</h2>
+            <h2>Scrape Reviews</h2>
             <div className="card-body">
                 <div className="form-group text-center">
                   <label htmlFor="exampleInputEmail1">
@@ -167,7 +167,6 @@ const Webscraper = () => {
                     placeholder="Csv file name"
                     value={fileName}
                     onChange={(e) => onFileNameChange(e)}
-                    disabled
                   />
                 </div>
                 <div className="form-group">

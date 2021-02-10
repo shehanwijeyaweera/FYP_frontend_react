@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import axios, { post } from "axios";
 import { Modal, Button, Spinner } from "react-bootstrap";
-import { Doughnut } from "react-chartjs-2";
 
-const Test = () => {
+const ModelTraining = () => {
+  const [load, setLoad] = useState(false);
   const [fileData, setFileDate] = useState();
   const [resultData, setResultData] = useState("");
   const [showData, setShowData] = useState(false);
-  const [load, setLoad] = useState(false);
+  const [modelFileName, setModelFileName] = useState("");
+  const onmodelFileNameChange = (e) => {
+    setModelFileName(e.target.value);
+    document.getElementById("submitbtn").disabled = false;
+  };
   const onUpload = (data) => {
     setFileDate(data.target.files[0]);
+    document.getElementById("exampleInputEmail2").disabled = false;
   };
-
   const handleUpload = async () => {
     setLoad(true);
-    const url = "http://127.0.0.1:5000/predict";
+    const url = "http://127.0.0.1:5000/model_training";
     const formData = new FormData();
     formData.append("reviews", fileData);
+    formData.append("file_name", modelFileName);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -42,76 +47,31 @@ const Test = () => {
     setResultData("");
   };
 
-  const piedata = {
-    labels: ["Excellent", "Very Good", "Average", "Poor", "Terrible"],
-    datasets: [
-      {
-        label: "sentiment analysis for hotel 2021",
-        data: [
-          resultData.Excellent,
-          resultData.Very_Good,
-          resultData.Average,
-          resultData.Poor,
-          resultData.Terrible,
-        ],
-        backgroundColor: [
-          "rgb(0,255,0)",
-          "rgba(0, 194, 19, 1)",
-          "rgb(255,255,0)",
-          "rgba(240, 80, 0, 1)",
-          "rgba(240, 0, 0, 1)",
-        ],
-      },
-    ],
-  };
-
-  const optionspie = {
-    title: {
-      display: true,
-      text: "Sentiment Analysis",
-    },
-  };
-
   return (
     <div>
-      <Modal
-        show={showData}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        onHide={handleClose}
-      >
+        <Modal show={showData} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Sentiment Analysis</Modal.Title>
+          <Modal.Title>Modal Training</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {resultData !== "" ? (
             <>
-              Excellent: {resultData.Excellent.toFixed(2)}%
+              Status: {resultData.status}
               <br />
               <br />
-              Very Good: {resultData.Very_Good.toFixed(2)}%
+              File Name: {resultData.file_name}
               <br />
               <br />
-              Average: {resultData.Average.toFixed(2)}%
-              <br />
-              <br />
-              Poor: {resultData.Poor.toFixed(2)}%
-              <br />
-              <br />
-              Terrible: {resultData.Terrible.toFixed(2)}%
+              File Path: {resultData.file_path}
             </>
           ) : null}
-          <div className="chart">
-            <Doughnut data={piedata} options={optionspie} />
-          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
           <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            Download File
           </Button>
         </Modal.Footer>
       </Modal>
@@ -119,11 +79,11 @@ const Test = () => {
         <br />
         <div className="row">
           <div className="card col-md-6 offset-md-3 offset-md-3 text-center">
-            <h2>Sentiment Analysis</h2>
+            <h2>Model Training</h2>
             <div className="card-body">
               <div className="form-group text-center">
                 <label htmlFor="exampleFormControlFile1">
-                  Uplaod CSV file for sentiment analysis
+                  Uplaod CSV file for Model Training:
                 </label>
                 <input
                   type="file"
@@ -133,14 +93,30 @@ const Test = () => {
                 />
               </div>
               <div className="form-group text-center">
+                  <label htmlFor="noOfPages">
+                    Model Name:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="exampleInputEmail2"
+                    aria-describedby="emailHelp"
+                    placeholder="Model Name"
+                    value={modelFileName}
+                    onChange={(e) => onmodelFileNameChange(e)}
+                    disabled
+                  />
+                </div>
+              <div className="form-group text-center">
                 <button
                   className="btn btn-primary"
                   type="submit"
                   onClick={handleUpload}
+                  id = "submitbtn"
                 >
                   {load ? (
                     <>
-                      <Spinner animation="border" variant="success" />
+                      <Spinner animation="border" variant="success" disabled/>
                     </>
                   ) : (
                     <>Upload</>
@@ -156,4 +132,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default ModelTraining;
