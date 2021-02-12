@@ -85,7 +85,7 @@ function ClientApp() {
   };
 
   const scrapeReviews = async (e, response) =>{
-    const API = "http://127.0.0.1:5000/scrape_reviews";
+    const API = "http://127.0.0.1:5000/scrape_reviews_db";
     const formData = new FormData();
     formData.append("url", e.link);
     formData.append("num_pages", response.data.No_pages);
@@ -109,9 +109,9 @@ function ClientApp() {
   };
 
   const sentimentAnalysis = async (filename) => {
-    const url = "http://127.0.0.1:5000/predict_client";
+    const url = "http://127.0.0.1:5000/predict_from_database";
     const formData = new FormData();
-    formData.append("filename", filename);
+    formData.append("hotel_name", filename);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -126,6 +126,7 @@ function ClientApp() {
         setShowData(true);
       })
       .catch((err) => {
+        document.getElementById("headertext").innerHTML = "Error Performing Sentiment Analysis! ";
         setLoad3(false);
         console.log(err.message);
       });

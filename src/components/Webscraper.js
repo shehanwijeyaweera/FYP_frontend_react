@@ -53,7 +53,7 @@ const Webscraper = () => {
 
   const handleUpload = async () => {
     setLoad2(true);
-    const API = "http://127.0.0.1:5000/scrape_reviews";
+    const API = "http://127.0.0.1:5000/scrape_reviews_db";
     const formData = new FormData();
     formData.append("url", url);
     formData.append("num_pages", noPages);
@@ -95,7 +95,7 @@ const Webscraper = () => {
         <Modal.Body>
           {resultData !== "" ? (
             <>
-              File Location: {resultData.file_location}
+              DB Table: {resultData.filename}
               <br />
               <br />
               Status: {resultData.status}
@@ -157,14 +157,14 @@ const Webscraper = () => {
                 </div>
                 <div className="form-group text-center">
                   <label htmlFor="exampleInputEmail3">
-                    File name of the CSV:
+                    Hotel Name:
                   </label>
                   <input
                     type="text"
                     className="form-control"
                     id="exampleInputEmail3"
                     aria-describedby="emailHelp"
-                    placeholder="Csv file name"
+                    placeholder="Hotel Name"
                     value={fileName}
                     onChange={(e) => onFileNameChange(e)}
                   />
