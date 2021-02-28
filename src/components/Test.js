@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios, { post } from "axios";
 import { Modal, Button, Spinner, Form } from "react-bootstrap";
 import { Doughnut } from "react-chartjs-2";
+import { MDBContainer, MDBRow, MDBCol, MDBBtn , MDBCard, MDBCardBody, MDBInput, MDBBadge} from "mdbreact";
 
 const Test = () => {
   const [fileData, setFileDate] = useState();
@@ -82,11 +83,11 @@ const Test = () => {
           resultData.Terrible,
         ],
         backgroundColor: [
-          "rgb(0,255,0)",
-          "rgba(0, 194, 19, 1)",
-          "rgb(255,255,0)",
-          "rgba(240, 80, 0, 1)",
-          "rgba(240, 0, 0, 1)",
+          "rgba(0,198,93,255)",
+          "rgba(40,187,174,255)",
+          "rgba(224,224,224,255)",
+          "rgba(255,186,69,255)",
+          "rgba(255,56,70,255)",
         ],
       },
     ],
@@ -129,28 +130,35 @@ const Test = () => {
         onHide={handleClose}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Sentiment Analysis</Modal.Title>
+          <Modal.Title>Sentiment Analysis: {resultData.hotel_name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {resultData !== "" ? (
             <>
-              Excellent: {resultData.Excellent.toFixed(2)}%
+            <div className="row">
+            <div className="col-6">
+              Excellent: <MDBBadge pill color="success"> {resultData.Excellent.toFixed(2)}% </MDBBadge>
               <br />
               <br />
-              Very Good: {resultData.Very_Good.toFixed(2)}%
+              Very Good: <MDBBadge pill color="default"> {resultData.Very_Good.toFixed(2)}% </MDBBadge>
               <br />
               <br />
-              Average: {resultData.Average.toFixed(2)}%
+              Average: <MDBBadge pill color="light"> {resultData.Average.toFixed(2)}% </MDBBadge>
+              </div>
+              <div className="col-6">
+              Poor: <MDBBadge pill color="warning"> {resultData.Poor.toFixed(2)}% </MDBBadge>
               <br />
               <br />
-              Poor: {resultData.Poor.toFixed(2)}%
-              <br />
-              <br />
-              Terrible: {resultData.Terrible.toFixed(2)}%
+              Terrible: <MDBBadge pill color="danger"> {resultData.Terrible.toFixed(2)}% </MDBBadge>
+              </div>
+              </div>
             </>
           ) : null}
           <div className="chart">
             <Doughnut data={piedata} options={optionspie} />
+          </div>
+          <div>
+            
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -162,26 +170,36 @@ const Test = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className="container">
-        <br />
-        <div className="row">
-          <div className="card col-md-6 offset-md-3 offset-md-3 text-center">
-            <h2>Sentiment Analysis</h2>
-            <div className="card-body">
-              <div className="form-group text-center">
-                <label htmlFor="exampleFormControlFile1">
-                  Uplaod CSV file for sentiment analysis
-                </label>
-                <input
-                  type="file"
-                  className="form-control-file text-center"
-                  id="exampleFormControlFile1"
-                  onChange={(e) => onUpload(e)}
-                />
-              </div>
-              <Form.Group controlId="formGridState">
-                <Form.Label>Or select from database</Form.Label>
-                <Form.Control value={hotelname} onChange={(e) => setHotelName(e.currentTarget.value)} as="select" defaultValue="Choose...">
+      {/* -------- */}
+      <MDBContainer>
+      <MDBRow>
+        <MDBCol md="6" className="offset-3" style={{marginTop: 100}}>
+          <MDBCard>
+            <div className="header pt-3 grey lighten-2">
+              <MDBRow className="d-flex justify-content-start">
+                <h3 className="deep-grey-text mt-3 mb-4 pb-1 mx-5">Sentiment Analysis</h3>
+                </MDBRow>
+            </div>
+            <MDBCardBody className="mx-4 mt-4">
+            <label
+                htmlFor="defaultFormEmailEx"
+                className="grey-text font-weight-light"
+              >
+                Uplaod CSV file for sentiment analysis
+              </label>
+              <MDBInput
+                 type="file"
+                 className="form-control-file text-center"
+                 id="exampleFormControlFile1"
+                 onChange={(e) => onUpload(e)}
+              />
+              <label
+                htmlFor="defaultFormEmailEx"
+                className="grey-text font-weight-light"
+              >
+                Or select from database
+              </label>
+              <Form.Control value={hotelname} onChange={(e) => setHotelName(e.currentTarget.value)} as="select" defaultValue="Choose...">
                   {tableList.length !== 0 ? (
                     <>
                       {tableList.map((obj) => (
@@ -192,8 +210,7 @@ const Test = () => {
                     </>
                   ) : null}
                 </Form.Control>
-              </Form.Group>
-              <div className="form-group text-center">
+                <div className="form-group text-center">
                 <button
                   className="btn btn-primary"
                   type="submit"
@@ -208,11 +225,11 @@ const Test = () => {
                   )}
                 </button>
               </div>
-              <div className="text-center"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+               </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
     </div>
   );
 };

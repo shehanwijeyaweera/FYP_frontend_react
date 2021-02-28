@@ -3,6 +3,7 @@ import { Modal, Button, Spinner } from "react-bootstrap";
 import axios, { post } from "axios";
 import Table from "react-bootstrap/Table";
 import { Doughnut } from "react-chartjs-2";
+import { MDBContainer, MDBRow, MDBCol, MDBBtn } from "mdbreact";
 
 function ClientApp() {
   const [show, setShow] = useState(false);
@@ -19,7 +20,8 @@ function ClientApp() {
   const [csvfilename, setCsvfilename] = useState("");
   const [resultData, setResultData] = useState("");
   const [showData, setShowData] = useState(false);
-
+  const [message, setMessage] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
   const HandleOne = async () => {
     setLoad(true);
     await axios
@@ -52,14 +54,15 @@ function ClientApp() {
       });
   };
 
-  const perfomSentiment = async (e) =>{
+  const perfomSentiment = async (e) => {
     setShow(false);
     setShow2(false);
-    document.getElementById('btnsl').style.visibility = 'hidden';
-    document.getElementById('btnwp').style.visibility = 'hidden';
-    document.getElementById("headertext").innerHTML = "Getting No of review pages of : " + e.title;
+    document.getElementById("btnsl").style.visibility = "hidden";
+    document.getElementById("btnwp").style.visibility = "hidden";
+    document.getElementById("headertext").innerHTML =
+      "Getting No of review pages of : " + e.title;
     setLoad3(true);
-    
+
     const API = "http://127.0.0.1:5000/no_pages";
     const formData = new FormData();
     formData.append("url", e.link);
@@ -72,19 +75,24 @@ function ClientApp() {
     await axios
       .post(API, formData, config)
       .then((response) => {
-        document.getElementById("headertext").innerHTML = "Pages : " + response.data.No_pages + " | Scraping reviews of : " + e.title;
+        document.getElementById("headertext").innerHTML =
+          "Pages : " +
+          response.data.No_pages +
+          " | Scraping reviews of : " +
+          e.title;
         setLoad3(true);
         scrapeReviews(e, response);
-        setCsvfilename(response.data.heading)
+        setCsvfilename(response.data.heading);
       })
       .catch((err) => {
         setLoad3(false);
         console.log(err.message);
-        document.getElementById("headertext").innerHTML = "Error getting No of pages: " + e.title;
+        document.getElementById("headertext").innerHTML =
+          "Error getting No of pages: " + e.title;
       });
   };
 
-  const scrapeReviews = async (e, response) =>{
+  const scrapeReviews = async (e, response) => {
     const API = "http://127.0.0.1:5000/scrape_reviews_db";
     const formData = new FormData();
     formData.append("url", e.link);
@@ -99,11 +107,13 @@ function ClientApp() {
     await axios
       .post(API, formData, config)
       .then((response) => {
-        document.getElementById("headertext").innerHTML = "Performing Sentiment Analysis of: " + e.title;
+        document.getElementById("headertext").innerHTML =
+          "Performing Sentiment Analysis of: " + e.title;
         sentimentAnalysis(response.data.filename);
       })
       .catch((err) => {
-        document.getElementById("headertext").innerHTML = "Error scraping reviews of : " + e.title;
+        document.getElementById("headertext").innerHTML =
+          "Error scraping reviews of : " + e.title;
         console.log(err.message);
       });
   };
@@ -126,12 +136,13 @@ function ClientApp() {
         setShowData(true);
       })
       .catch((err) => {
-        document.getElementById("headertext").innerHTML = "Error Performing Sentiment Analysis! ";
+        document.getElementById("headertext").innerHTML =
+          "Error Performing Sentiment Analysis! ";
         setLoad3(false);
         console.log(err.message);
       });
   };
-  
+
   const piedata = {
     labels: ["Excellent", "Very Good", "Average", "Poor", "Terrible"],
     datasets: [
@@ -162,9 +173,6 @@ function ClientApp() {
     },
   };
 
-
-
-
   return (
     <>
       <Modal show={show} onHide={handleClose} size="lg">
@@ -187,8 +195,22 @@ function ClientApp() {
                     <>
                       <tr>
                         <td>{obj.title}</td>
-                        <td><a className="btn btn-outline-primary my-2 my-sm-0" href={obj.link}>Visit Page</a></td>
-                        <td><a className="btn btn-outline-info my-2 my-sm-0" onClick={(e) => perfomSentiment(obj)}>perform sentiment</a></td>
+                        <td>
+                          <a
+                            className="btn btn-outline-primary my-2 my-sm-0"
+                            href={obj.link}
+                          >
+                            Visit Page
+                          </a>
+                        </td>
+                        <td>
+                          <a
+                            className="btn btn-outline-info my-2 my-sm-0"
+                            onClick={(e) => perfomSentiment(obj)}
+                          >
+                            perform sentiment
+                          </a>
+                        </td>
                       </tr>
                     </>
                   ))}
@@ -212,7 +234,7 @@ function ClientApp() {
           <Modal.Title>Top Hotels around Western province</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Table striped bordered hover>
+          <Table striped bordered hover>
             <thead>
               <tr>
                 <th>Hotel</th>
@@ -227,8 +249,19 @@ function ClientApp() {
                     <>
                       <tr>
                         <td>{obj2.title}</td>
-                        <td><a className="btn btn-outline-primary my-2 my-sm-0" href={obj2.link}>Visit Page</a></td>
-                        <td><a className="btn btn-outline-info my-2 my-sm-0">perform sentiment</a></td>
+                        <td>
+                          <a
+                            className="btn btn-outline-primary my-2 my-sm-0"
+                            href={obj2.link}
+                          >
+                            Visit Page
+                          </a>
+                        </td>
+                        <td>
+                          <a className="btn btn-outline-info my-2 my-sm-0">
+                            perform sentiment
+                          </a>
+                        </td>
                       </tr>
                     </>
                   ))}
@@ -289,51 +322,64 @@ function ClientApp() {
         </Modal.Footer>
       </Modal>
       <div>
-        <div className="text-center"><h2 id="headertext">Client App</h2>
-        {load3 ? (
+        <MDBContainer>
+          <MDBRow >
+            <MDBCol md="6" className="offset-3">
+              <div className="text-center">
+                <br></br>
+                <h2 id="headertext">Hotel sentiment Analysis</h2>
+                <br></br>
+                <img src="https://partners.aljazeera.net/sites/default/files/banners/2020/001_0.jpg" style={{height:200, marginBottom:50}}/>
+                <br></br>
+                {load3 ? (
+                  <>
+                    <Spinner animation="border" variant="success" />
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+              <div className="text-center">
                 <>
-                  <Spinner animation="border" variant="success" />
+                  <MDBBtn
+                    variant="primary"
+                    size="lg"
+                    active
+                    id="btnsl"
+                    onClick={HandleOne}
+                    style={{ width: 300, height: 75 }}
+                    color="purple"
+                  >
+                    {load ? (
+                      <>
+                        <Spinner animation="border" variant="success" />
+                      </>
+                    ) : (
+                      <>Top Hotels in Sri Lanka</>
+                    )}
+                  </MDBBtn>{" "}
+                  <MDBBtn
+                    variant="primary"
+                    size="lg"
+                    active
+                    id="btnwp"
+                    onClick={Handletwo}
+                    style={{ width: 300 }}
+                    color="purple"
+                  >
+                    {load2 ? (
+                      <>
+                        <Spinner animation="border" variant="success" />
+                      </>
+                    ) : (
+                      <>Top Hotels around Western province</>
+                    )}
+                  </MDBBtn>{" "}
                 </>
-              ) : (
-                <></>
-              )}
-        </div>
-        <div className="text-center">
-          <>
-            <Button
-              variant="primary"
-              size="lg"
-              active
-              id="btnsl"
-              onClick={HandleOne}
-              style={{ width: 200 }}
-            >
-              {load ? (
-                <>
-                  <Spinner animation="border" variant="success" />
-                </>
-              ) : (
-                <>Top Hotels in Sri Lanka</>
-              )}
-            </Button>{" "}
-            <Button
-              variant="primary"
-              size="lg"
-              active
-              id="btnwp"
-              onClick={Handletwo}
-              style={{ width: 200 }}
-            >
-              {load2 ? (
-                <>
-                  <Spinner animation="border" variant="success" />
-                </>
-              ) : (
-                <>Top Hotels around Western province</>
-              )}
-            </Button>{" "}
-          </>
-        </div>
+              </div>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
       </div>
     </>
   );

@@ -12,9 +12,9 @@ function App() {
   return (
     <div>
       <Router>
-        <div>
+        <div >
           <HeaderComponent />
-          <div className="container">
+          <div style={{backgroundImage:"radial-gradient(circle, #84a0c9, #4fb0d8, #00bfd2, #00cbb3, #51d183)",height:"100vh",width:"100vw",margin:"0 auto"}}>
             <Switch>
               <Route path="/" exact component={SentimentHomepage}></Route>
               <Route path="/sentiment" exact  component={SentimentHomepage}></Route>
